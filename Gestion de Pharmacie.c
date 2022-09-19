@@ -12,7 +12,7 @@ struct Product {
 };
 struct Product product;
 //    function to add records
-void insert() {
+void insert1() {
   FILE *fp;
   fp = fopen("products", "a");
   printf("Entrer le code du produit        :");
@@ -29,7 +29,42 @@ void insert() {
   __fpurge(stdin);
 }
 
-//    function o check if the drug is there //
+void insertm() {
+  int n;
+  printf("entrez le nombre des produits que vous voulez ajouter :");
+  scanf("%d", &n);
+  for (int i = 1; i <= n; i++) {
+    if (i == 1) {
+      printf("entree les donnee de 1er produit :\n");
+      insert1();
+    } else {
+      printf("entree les donnee de %deme produit :\n", i);
+      insert1();
+    }
+  }
+}
+
+void insert() {
+  int option;
+foo:
+  printf("Combien des produit voulez vous ajouter? \n1.un seul produit. "
+         "\n2.plusieur produits  \n");
+  printf("Entrez votre choix:");
+  scanf("%d", &option);
+  switch (option) {
+  case 1:
+    insert1();
+    break;
+  case 2:
+    insertm();
+    break;
+  default:
+    __fpurge(stdin);
+    goto foo;
+    break;
+  }
+}
+
 int drugcheck(int rno) {
   FILE *fp;
   int c = 0;
@@ -235,6 +270,20 @@ void vendre() {
   }
 }
 
+void estock() {
+  int count = 0;
+  FILE *fpo;
+  fpo = fopen("products", "r");
+  printf("\nCODE  \t\tQUANTITE \t\t NOM \t\tPRIX \t\t PRIX TTC\n\n");
+  rewind(fpo);
+  while (fread(&product, sizeof(product), 1, fpo)) {
+    if (product.quantity <= 3)
+      printf("%d\t\t\t%i\t\t\t%s\t\t\t%.2f\t\t\t%.2f\n", product.code,
+             product.quantity, product.drugname, product.price,
+             product.price_ttc);
+  }
+}
+
 void sort() {
   int a[200], count = 0, i, j, t, c;
   FILE *fpo;
@@ -267,7 +316,7 @@ void sort() {
 }
 
 int main(void) {
-  int c, emp;
+  int c;
   do {
     printf("\n\t---------bienvenue dans votre pharmacie---------\n");
     printf("\n\t1. Ajouter un nouveau produit");
@@ -296,7 +345,7 @@ int main(void) {
       search();
       break;
     case 5:
-      // estock();
+      estock();
       break;
     case 6:
       astock();
@@ -308,9 +357,9 @@ int main(void) {
       exit(1);
       break;
     default:
-      printf("\nYour choice is wrong\nPlease try again...\n");
+      printf("\nchoix invalide !\nveuillez entrez un choix entre 1 et 8\n");
       __fpurge(stdin);
       break;
     }
-  } while (c != 8);
+  } while (1);
 }
