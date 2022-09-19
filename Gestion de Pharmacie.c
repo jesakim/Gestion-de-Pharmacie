@@ -2,6 +2,8 @@
 #include <stdio_ext.h>
 #include <stdlib.h>
 #include <string.h>
+#include<time.h>
+
 
 struct Product {
   int code;
@@ -9,6 +11,9 @@ struct Product {
   char drugname[30];
   float price;
   float price_ttc;
+  char lasttimesold[100];
+  float tatalsoldprice;
+  int totaltimesold;
 };
 struct Product product;
 //    function to add records
@@ -24,6 +29,8 @@ void insert1() {
   printf("Entrer le prix du produit        :");
   scanf("%f", &product.price);
   product.price_ttc = product.price + product.price * 0.15;
+  product.totaltimesold =0;
+  product.tatalsoldprice = 0;
   fwrite(&product, sizeof(product), 1, fp);
   fclose(fp);
   __fpurge(stdin);
@@ -253,7 +260,10 @@ void vendre() {
         printf("Entrez la quantité que vous voulez vendre :");
         scanf("%d", &t);
         product.quantity = product.quantity - t;
-
+        long ti = time(NULL);
+        strcpy(product.lasttimesold, ctime(&ti));
+        product.totaltimesold+=t;
+        product.tatalsoldprice=product.totaltimesold*product.price_ttc; 
         fwrite(&product, sizeof(product), 1, fpt);
       }
     }
@@ -315,6 +325,31 @@ void sort() {
   }
 }
 
+void statistique(){
+FILE *fp2;
+  int r, s, drog;
+  printf("\nEntrez le code du produit que vous souhaitez rechercher  :");
+  scanf("%d", &r);
+  drog = drugcheck(r);
+  if (drog == 0)
+    printf("le médicament %d n'est pas disponible dans le stock\n", r);
+  else {
+    fp2 = fopen("products", "r");
+    while (fread(&product, sizeof(product), 1, fp2)) {
+      s = product.code;
+      if (s == r) {
+        printf("\nle code du produit      = %d", product.code);
+        printf("\nle nom du produit       = %s", product.drugname);
+        printf("\nla dernier fois vendu  = %s", product.lasttimesold);
+        printf("\ncombien de fois ce produit est vendu  = %d", product.totaltimesold);
+        printf("\ntotal d'argent fais par ce produit  = %.2f", product.totaltimesold);
+      }
+    }
+    fclose(fp2);
+  }
+  
+}
+
 int main(void) {
   int c;
   do {
@@ -325,8 +360,9 @@ int main(void) {
     printf("\n\t4. Rechercher un produits");
     printf("\n\t5. Etat du stock");
     printf("\n\t6. Alimenter le stock");
-    printf("\n\t7. Supprimer les produits");
-    printf("\n\t8. Exit");
+    printf("\n\t7. Supprimer un produit");
+    printf("\n\t8. statistique");
+    printf("\n\t8. exit");
     printf("\n\n------------------------------------------\n");
     printf("\nEntrez votre choix:");
     scanf("%d", &c);
@@ -354,6 +390,9 @@ int main(void) {
       delete ();
       break;
     case 8:
+      statistique();
+      break;
+    case 9:
       exit(1);
       break;
     default:
