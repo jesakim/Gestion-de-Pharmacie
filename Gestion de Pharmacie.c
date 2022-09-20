@@ -18,7 +18,7 @@ struct Product product;
 //    function to add records
 void insert1() {
   FILE *fp;
-  fp = fopen("products", "a");
+  fp = fopen("products.bin", "ab");
   printf("Entrer le code du produit        :");
   scanf("%d", &product.code);
   printf("Entrer la quantité               :");
@@ -74,7 +74,7 @@ foo:
 int drugcheck(int rno) {
   FILE *fp;
   int c = 0;
-  fp = fopen("products", "r");
+  fp = fopen("products.bin", "rb");
   while (!feof(fp)) {
     fread(&product, sizeof(product), 1, fp);
 
@@ -96,7 +96,7 @@ void searchcode() {
   if (drog == 0)
     printf("le médicament %d n'est pas disponible dans le stock\n", r);
   else {
-    fp2 = fopen("products", "r");
+    fp2 = fopen("products.bin", "rb");
     while (fread(&product, sizeof(product), 1, fp2)) {
       s = product.code;
       if (s == r) {
@@ -113,7 +113,7 @@ void searchcode() {
 int drugcheckq(int rno) {
   FILE *fp;
   int c = 0;
-  fp = fopen("products", "r");
+  fp = fopen("products.bin", "rb");
   while (!feof(fp)) {
     fread(&product, sizeof(product), 1, fp);
 
@@ -136,7 +136,7 @@ void searchq() {
     printf("le médicament du quantité %d n'est pas disponible dans le stock\n",
            r);
   else {
-    fp2 = fopen("products", "r");
+    fp2 = fopen("products.bin", "rb");
     while (fread(&product, sizeof(product), 1, fp2)) {
       s = product.quantity;
       if (s == r) {
@@ -179,8 +179,8 @@ void delete () {
   if (drugcheck(r) == 0)
     printf("le médicament %d n'est pas disponible dans le stock\n", r);
   else {
-    fpo = fopen("products", "r");
-    fpt = fopen("TempFile", "w");
+    fpo = fopen("products.bin", "rb");
+    fpt = fopen("TempFile.bin", "wb");
     while (fread(&product, sizeof(product), 1, fpo)) {
       s = product.code;
       if (s != r)
@@ -188,8 +188,8 @@ void delete () {
     }
     fclose(fpo);
     fclose(fpt);
-    fpo = fopen("products", "w");
-    fpt = fopen("TempFile", "r");
+    fpo = fopen("products.bin", "wb");
+    fpt = fopen("TempFile.bin", "rb");
     while (fread(&product, sizeof(product), 1, fpt))
       fwrite(&product, sizeof(product), 1, fpo);
     printf("\nPRODUIT SUPPRIMÉ\n");
@@ -209,8 +209,8 @@ void astock() {
   if (drug1 == 0) {
     printf("le médicament %d n'est pas disponible dans le stock", r);
   } else {
-    fpo = fopen("products", "r");
-    fpt = fopen("TempFile", "w");
+    fpo = fopen("products.bin", "rb");
+    fpt = fopen("TempFile.bin", "wb");
     while (fread(&product, sizeof(product), 1, fpo)) {
       s = product.code;
       if (s != r)
@@ -226,8 +226,8 @@ void astock() {
     }
     fclose(fpo);
     fclose(fpt);
-    fpo = fopen("products", "w");
-    fpt = fopen("TempFile", "r");
+    fpo = fopen("products.bin", "wb");
+    fpt = fopen("TempFile.bin", "rb");
     while (fread(&product, sizeof(product), 1, fpt)) {
       fwrite(&product, sizeof(product), 1, fpo);
     }
@@ -248,8 +248,8 @@ void vendre() {
   if (drug1 == 0) {
     printf("le médicament %d n'est pas disponible dans le stock", r);
   } else {
-    fpo = fopen("products", "r");
-    fpt = fopen("TempFile", "w");
+    fpo = fopen("products.bin", "rb");
+    fpt = fopen("TempFile.bin", "wb");
     while (fread(&product, sizeof(product), 1, fpo)) {
       s = product.code;
       if (s != r)
@@ -268,8 +268,8 @@ void vendre() {
     }
     fclose(fpo);
     fclose(fpt);
-    fpo = fopen("products", "w");
-    fpt = fopen("TempFile", "r");
+    fpo = fopen("products.bin", "wb");
+    fpt = fopen("TempFile.bin", "rb");
     while (fread(&product, sizeof(product), 1, fpt)) {
       fwrite(&product, sizeof(product), 1, fpo);
     }
@@ -282,7 +282,7 @@ void vendre() {
 void estock() {
   int count = 0;
   FILE *fpo;
-  fpo = fopen("products", "r");
+  fpo = fopen("products.bin", "rb");
   printf("\nCODE  \t\tQUANTITE \t\t NOM \t\tPRIX \t\t PRIX TTC\n\n");
   rewind(fpo);
   while (fread(&product, sizeof(product), 1, fpo)) {
@@ -296,7 +296,7 @@ void estock() {
 void sort() {
   int a[200], count = 0, i, j, t, c;
   FILE *fpo;
-  fpo = fopen("products", "r");
+  fpo = fopen("products.bin", "rb");
   while (fread(&product, sizeof(product), 1, fpo)) {
     a[count] = product.price;
     count++;
@@ -333,7 +333,7 @@ void statistique() {
   if (drog == 0)
     printf("le médicament %d n'est pas disponible dans le stock\n", r);
   else {
-    fp2 = fopen("products", "r");
+    fp2 = fopen("products.bin", "rb");
     while (fread(&product, sizeof(product), 1, fp2)) {
       s = product.code;
       if (s == r) {
