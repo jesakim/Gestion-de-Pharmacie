@@ -2,8 +2,7 @@
 #include <stdio_ext.h>
 #include <stdlib.h>
 #include <string.h>
-#include<time.h>
-
+#include <time.h>
 
 struct Product {
   int code;
@@ -29,7 +28,7 @@ void insert1() {
   printf("Entrer le prix du produit        :");
   scanf("%f", &product.price);
   product.price_ttc = product.price + product.price * 0.15;
-  product.totaltimesold =0;
+  product.totaltimesold = 0;
   product.tatalsoldprice = 0;
   fwrite(&product, sizeof(product), 1, fp);
   fclose(fp);
@@ -42,10 +41,10 @@ void insertm() {
   scanf("%d", &n);
   for (int i = 1; i <= n; i++) {
     if (i == 1) {
-      printf("entree les donnee de 1er produit :\n");
+      printf("\nentree les donnee de 1er produit :\n\n");
       insert1();
     } else {
-      printf("entree les donnee de %deme produit :\n", i);
+      printf("\nentree les donnee de %deme produit :\n\n", i);
       insert1();
     }
   }
@@ -104,7 +103,7 @@ void searchcode() {
         printf("\nle code du produit      = %d", product.code);
         printf("\nle nom du produit       = %s", product.drugname);
         printf("\nla quantité du produit  = %d", product.quantity);
-        printf("\nle prix TTC du produit  = %.2f\n", product.price_ttc);
+        printf("\nle prix TTC du produit  = %.2f DH\n", product.price_ttc);
       }
     }
     fclose(fp2);
@@ -144,7 +143,7 @@ void searchq() {
         printf("\nle code du produit      = %d", product.code);
         printf("\nle nom du produit       = %s", product.drugname);
         printf("\nla quantité du produit  = %d", product.quantity);
-        printf("\nle prix TTC du produit  = %.2f\n", product.price_ttc);
+        printf("\nle prix TTC du produit  = %.2f DH\n", product.price_ttc);
       }
     }
     fclose(fp2);
@@ -262,8 +261,8 @@ void vendre() {
         product.quantity = product.quantity - t;
         long ti = time(NULL);
         strcpy(product.lasttimesold, ctime(&ti));
-        product.totaltimesold+=t;
-        product.tatalsoldprice=product.totaltimesold*product.price_ttc; 
+        product.totaltimesold += t;
+        product.tatalsoldprice = product.totaltimesold * product.price_ttc;
         fwrite(&product, sizeof(product), 1, fpt);
       }
     }
@@ -318,15 +317,15 @@ void sort() {
     rewind(fpo);
     while (fread(&product, sizeof(product), 1, fpo)) {
       if (a[i] == product.price)
-        printf("%d\t\t\t%i\t\t\t%s\t\t\t%.2f\t\t\t%.2f\n", product.code,
+        printf("%d\t\t\t%i\t\t\t\t%s\t\t\t%.2f DH\t\t\t%.2f DH\n", product.code,
                product.quantity, product.drugname, product.price,
                product.price_ttc);
     }
   }
 }
 
-void statistique(){
-FILE *fp2;
+void statistique() {
+  FILE *fp2;
   int r, s, drog;
   printf("\nEntrez le code du produit que vous souhaitez rechercher  :");
   scanf("%d", &r);
@@ -341,19 +340,20 @@ FILE *fp2;
         printf("\nle code du produit      = %d", product.code);
         printf("\nle nom du produit       = %s", product.drugname);
         printf("\nla dernier fois vendu  = %s", product.lasttimesold);
-        printf("\ncombien de fois ce produit est vendu  = %d", product.totaltimesold);
-        printf("\ntotal d'argent fais par ce produit  = %.2f", product.totaltimesold);
+        printf("\ncombien de fois ce produit est vendu  = %d",
+               product.totaltimesold);
+        printf("\ntotal d'argent fais par ce produit  = %.2f DH",
+               product.tatalsoldprice);
       }
     }
     fclose(fp2);
   }
-  
 }
 
 int main(void) {
   int c;
   do {
-    printf("\n\t---------bienvenue dans votre pharmacie---------\n");
+    printf("\n\n\t---------bienvenue dans votre pharmacie---------\n");
     printf("\n\t1. Ajouter un nouveau produit");
     printf("\n\t2. Lister tous les produits");
     printf("\n\t3. Acheter un produit");
