@@ -4,7 +4,7 @@
 #include <string.h>
 #include <time.h>
 
-struct Product {
+struct product {
   int code;
   int quantity;
   char drugname[30];
@@ -13,9 +13,8 @@ struct Product {
   char lasttimesold[100];
   float tatalsoldprice;
   int totaltimesold;
-};
-struct Product product;
-//    function to add records
+}product;
+//    fonction pour ajouter un produit. 
 void insert1() {
   FILE *fp;
   fp = fopen("products.bin", "ab");
@@ -35,6 +34,8 @@ void insert1() {
   __fpurge(stdin);
 }
 
+//    fonction pour ajouter plusieur produits. 
+
 void insertm() {
   int n;
   printf("entrez le nombre des produits que vous voulez ajouter :");
@@ -49,6 +50,8 @@ void insertm() {
     }
   }
 }
+
+//    fonction mère pour ajouter un produit. 
 
 void insert() {
   int option;
@@ -71,6 +74,8 @@ foo:
   }
 }
 
+//    fonction pour verifier si le code de produit est dans le stock.
+
 int drugcheck(int rno) {
   FILE *fp;
   int c = 0;
@@ -86,6 +91,8 @@ int drugcheck(int rno) {
   fclose(fp);
   return 0;
 }
+
+//    fonction pour verifier si le code de produit est dans le stock.
 
 void searchcode() {
   FILE *fp2;
@@ -110,6 +117,8 @@ void searchcode() {
   }
 }
 
+//    fonction pour verifier si la quantité de produit est dans le stock.
+
 int drugcheckq(int rno) {
   FILE *fp;
   int c = 0;
@@ -125,6 +134,8 @@ int drugcheckq(int rno) {
   fclose(fp);
   return 0;
 }
+
+//    fonction pour verifier si la quantité de produit est dans le stock.
 
 void searchq() {
   FILE *fp2;
@@ -150,6 +161,8 @@ void searchq() {
   }
 }
 
+//    fonction mère pour chercher un produit.
+
 void search() {
   int option;
 foo:
@@ -169,6 +182,8 @@ foo:
     break;
   }
 }
+
+//    fonction pour supprimer un produit.
 
 void delete () {
   FILE *fpo;
@@ -197,6 +212,8 @@ void delete () {
     fclose(fpt);
   }
 }
+
+//    fonction pour alimenter le stock d'un produit.
 
 void astock() {
   int drug1;
@@ -236,6 +253,8 @@ void astock() {
     printf("LE STOCK EST ALIMENTE");
   }
 }
+
+//    fonction pour effectuer une commande.
 
 void vendre() {
   int drug1;
@@ -279,19 +298,22 @@ void vendre() {
   }
 }
 
+//    fonction pour verifier l'état du stock d'un produit.
+
 void estock() {
-  int count = 0;
   FILE *fpo;
   fpo = fopen("products.bin", "rb");
   printf("\nCODE  \t\tQUANTITE \t\t NOM \t\tPRIX \t\t PRIX TTC\n\n");
   rewind(fpo);
   while (fread(&product, sizeof(product), 1, fpo)) {
     if (product.quantity <= 3)
-      printf("%d\t\t\t%i\t\t\t%s\t\t\t%.2f\t\t\t%.2f\n", product.code,
+      printf("%d\t\t\t%i\t\t\t\t%s\t\t\t%.2f DH\t\t\t%.2f DH\n", product.code,
              product.quantity, product.drugname, product.price,
              product.price_ttc);
   }
 }
+
+//    fonction pour trier tous les produits selon l’ordre  décroissant du prix.
 
 void sort() {
   int a[200], count = 0, i, j, t, c;
@@ -301,7 +323,6 @@ void sort() {
     a[count] = product.price;
     count++;
   }
-  c = count;
   for (i = 0; i < count - 1; i++) {
     for (j = i + 1; j < count; j++) {
       if (a[i] < a[j]) {
@@ -312,7 +333,6 @@ void sort() {
     }
   }
   printf("\nCODE  \t\tQUANTITE \t\t NOM \t\tPRIX \t\t PRIX TTC\n\n");
-  count = c;
   for (i = 0; i < count; i++) {
     rewind(fpo);
     while (fread(&product, sizeof(product), 1, fpo)) {
@@ -323,6 +343,65 @@ void sort() {
     }
   }
 }
+
+//    fonction pour trier tous les produits selon l’ordre alphabétique  croissant du nom.
+
+void sortname() {
+  int count = 0, i, j, c;
+  char a[30][30], t[30];
+  FILE *fpo;
+  fpo = fopen("products.bin", "rb");
+  while (fread(&product, sizeof(product), 1, fpo)) {
+    strcpy(a[count], product.drugname);
+    count++;
+  }
+  for (i = 0; i < count - 1; i++) {
+    for (j = i + 1; j < count; j++) {
+      int index = strcmp(a[i], a[j]);
+      if (index > 0) {
+        strcpy(t, a[i]);
+        strcpy(a[i], a[j]);
+        strcpy(a[j], t);
+      }
+    }
+  }
+  printf("\nCODE  \t\tQUANTITE \t\t NOM \t\tPRIX \t\t PRIX TTC\n\n");
+  for (i = 0; i < count; i++) {
+    rewind(fpo);
+    while (fread(&product, sizeof(product), 1, fpo)) {
+      if (strcmp(a[i], product.drugname) == 0)
+        printf("%d\t\t\t%i\t\t\t\t%s\t\t\t%.2f DH\t\t\t%.2f DH\n", product.code,
+               product.quantity, product.drugname, product.price,
+               product.price_ttc);
+    }
+  }
+}
+
+//    fonction mère pour lister les produits.
+
+void lister() {
+  int option;
+foo:
+  printf(
+      "choisissez comment voulez vous lister les produits :\n1.Selon l’ordre "
+      "alphabétique  croissant du nom \n2.L’ordre  décroissant du prix.  \n");
+  printf("Entrez votre choix:");
+  scanf("%d", &option);
+  switch (option) {
+  case 1:
+    sortname();
+    break;
+  case 2:
+    sort();
+    break;
+  default:
+    __fpurge(stdin);
+    goto foo;
+    break;
+  }
+}
+
+//    fonction affiche les statistique d'un produit.
 
 void statistique() {
   FILE *fp2;
@@ -350,6 +429,8 @@ void statistique() {
   }
 }
 
+//    fontion principale.
+
 int main(void) {
   int c;
   do {
@@ -372,7 +453,7 @@ int main(void) {
       insert();
       break;
     case 2:
-      sort();
+      lister();
       break;
     case 3:
       vendre();
