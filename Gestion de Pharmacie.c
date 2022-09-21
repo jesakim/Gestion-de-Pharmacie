@@ -316,7 +316,8 @@ void estock() {
 //    fonction pour trier tous les produits selon l’ordre  décroissant du prix.
 
 void sort() {
-  int a[200], count = 0, i, j, t, c;
+  int a[200]; 
+  int count = 0, i, j, t, c;
   FILE *fpo;
   fpo = fopen("products.bin", "rb");
   while (fread(&product, sizeof(product), 1, fpo)) {
@@ -332,7 +333,7 @@ void sort() {
       }
     }
   }
-  printf("\nCODE  \t\tQUANTITE \t\t NOM \t\tPRIX \t\t PRIX TTC\n\n");
+  printf("\nCODE  \t\tQUANTITE \t\t NOM \t\t\t\tPRIX \t\t\t\t PRIX TTC\n\n");
   for (i = 0; i < count; i++) {
     rewind(fpo);
     while (fread(&product, sizeof(product), 1, fpo)) {
@@ -357,7 +358,7 @@ void sortname() {
   }
   for (i = 0; i < count - 1; i++) {
     for (j = i + 1; j < count; j++) {
-      int index = strcmp(a[i], a[j]);
+      int index = strcasecmp(a[i], a[j]);
       if (index > 0) {
         strcpy(t, a[i]);
         strcpy(a[i], a[j]);
@@ -443,7 +444,7 @@ int main(void) {
     printf("\n\t6. Alimenter le stock");
     printf("\n\t7. Supprimer un produit");
     printf("\n\t8. statistique");
-    printf("\n\t8. exit");
+    printf("\n\t9. exit");
     printf("\n\n------------------------------------------\n");
     printf("\nEntrez votre choix:");
     scanf("%d", &c);
@@ -474,7 +475,7 @@ int main(void) {
       statistique();
       break;
     case 9:
-      exit(1);
+      exit(0);
       break;
     default:
       printf("\nchoix invalide !\nveuillez entrez un choix entre 1 et 8\n");
